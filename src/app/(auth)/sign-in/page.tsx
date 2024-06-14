@@ -5,8 +5,8 @@ import { signInSchema } from '@/schemas/signInschema';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { signIn } from 'next-auth/react';
 import Link from 'next/link';
-import { useRouter } from 'next/navigation'
-import React from 'react'
+import { useRouter } from 'next/navigation';
+import React from 'react';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 import {
@@ -19,46 +19,47 @@ import {
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 
- function signInForm() {
+function SignInForm() {
   const router = useRouter();
-  const form = useForm< z.infer<typeof signInSchema>>({
-    resolver : zodResolver(signInSchema),
+  const form = useForm<z.infer<typeof signInSchema>>({
+    resolver: zodResolver(signInSchema),
     defaultValues: {
       identifier: '',
       password: '',
     },
   });
-  const {toast} = useToast();
-  const  onSubmit = async (data: z.infer<typeof signInSchema>) =>{
-    const result = await signIn('credentials',{
+  const { toast } = useToast();
+  const onSubmit = async (data: z.infer<typeof signInSchema>) => {
+    const result = await signIn('credentials', {
       redirect: false,
-      identifier : data.identifier,
+      identifier: data.identifier,
       password: data.password,
     });
-    // error handling 
-    if(result?.error){
-      if(result.error === 'CredentialsSignin'){
+
+    // error handling
+    if (result?.error) {
+      if (result.error === 'CredentialsSignin') {
         toast({
           title: "Login Failed",
           description: "Incorrect username or password ",
           variant: "destructive",
-        })
-      }
-      else{
+        });
+      } else {
         toast({
-          title: 'error',
+          title: 'Error',
           description: result.error,
           variant: "destructive",
-        })
+        });
+      }
     }
-    
-    }
-    if(result?.url){
+
+    if (result?.url) {
       router.replace("/dashboard");
     }
   }
+
   return (
-<div className="flex justify-center items-center min-h-screen bg-gray-800">
+    <div className="flex justify-center items-center min-h-screen bg-gray-800">
       <div className="w-full max-w-md p-8 space-y-8 bg-white rounded-lg shadow-md">
         <div className="text-center">
           <h1 className="text-4xl font-extrabold tracking-tight lg:text-5xl mb-6">
@@ -103,7 +104,7 @@ import { Input } from '@/components/ui/input';
         </div>
       </div>
     </div>
-  );  
+  );
 }
 
-export default signInForm
+export default SignInForm;
